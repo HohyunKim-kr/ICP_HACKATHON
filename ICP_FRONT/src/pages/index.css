@@ -1,0 +1,196 @@
+ @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+main {
+  display: flex;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: "Noto Sans KR",sans-serif;
+  font-size:1em;
+  align-items: center;
+  justify-content: center;
+  
+}
+
+/* bvImage,codeImage,bvFont*/
+.bvImage{
+  width: 30vw;
+  height: 20vw;
+  margin-top: 10vw;
+  padding: "10px 20px";
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  
+}
+.codeImage{
+  margin-top: 100;
+  width: 30vw;
+  height: 20vw;
+  padding: "10px 20px";
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+}
+
+.bvFont{
+  font-size: 2vw;
+  color: black;
+  font-style: bold;
+}
+/*ADName */
+.ADName{
+  background-color: white;
+  width: 1000px;
+  height: 700px;
+  color:black;
+  border: 3px bold green;
+  border-radius: 0.3;
+}
+/*GameName,GameInfo,GameStart*/
+.GameName{
+  margin-top: 10vw;
+  font-size: 10vw;
+  color: black;
+  font-style: normal;
+  margin-bottom: 200;
+}
+.GameInfo{
+  z-index: -1;
+  align-items: center;
+  font-size: 3vw;
+  color: black;
+  font-style: normal;
+  justify-content: center;
+  margin-bottom: 10vw;
+
+}
+.box{
+  display: flex;
+  justify-content: flex-end;
+}
+.GameStart{
+  align-items: center;
+  width: 400px;
+  height: 300px;
+  background-color: green;
+  border-radius: 2dvb;
+  font-size: 4vw;
+  color: white;
+  font-style: bold;
+}
+.flex-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+}
+
+.header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px;
+  width: 100%;
+  height: 60px;
+}
+
+
+
+
+.swap-main-container {
+  width: 100%;
+  height: 100%;
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+
+  border-radius: 10px;
+  border: 1px solid #bdbdbd;
+}
+
+.title-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 3dv;
+  align-items: center;
+}
+.ButtonMain{
+  margin-top: 2vw;
+}
+.box2{
+  text-align: center;
+  justify-content: baseline;
+}
+.title {
+  font-size: 24px;
+  letter-spacing: 1.2px;
+  font-weight: 900;
+  background: linear-gradient(
+    90deg,
+    rgb(146, 248, 150) 0%,
+    rgb(19, 188, 33) 0%,
+    rgba(71, 210, 166, 1) 36%,
+    rgb(25, 223, 111) 78%,
+    rgb(31, 89, 30) 100%,
+    rgb(5, 58, 52) 100%,
+  );
+}
+.swap-info-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5dv;
+}
+
+.type-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.type-text {
+  color: #8c8c8c;
+  flex: 1;
+  font-weight: 600;
+  text-align: center;
+}
+
+.coin-img {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+}
+
+.coin-info-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.amount {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 900;
+  color: #515151;
+  letter-spacing: 1.2px;
+  flex: 1;
+}
+
+.balance {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #686868;
+  flex: 1;
+}
