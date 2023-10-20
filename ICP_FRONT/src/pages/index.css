@@ -1,99 +1,28 @@
  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
 
-* {
+ * {
   box-sizing: border-box;
-}
-
-html,
-body,
-main {
-  display: flex;
-  height: 100%;
   margin: 0;
   padding: 0;
-  font-family: "Noto Sans KR",sans-serif;
-  font-size:1em;
+}
+
+html, body, main {
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  
+  height: 100vh;
+  font-family: "Noto Sans KR", sans-serif;
+  background-color: #f0f0f0; /* 배경색 설정 */
 }
 
-/* bvImage,codeImage,bvFont*/
-.bvImage{
-  width: 30vw;
-  height: 20vw;
-  margin-top: 10vw;
-  padding: "10px 20px";
+.main {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  
-}
-.codeImage{
-  margin-top: 100;
-  width: 30vw;
-  height: 20vw;
-  padding: "10px 20px";
-  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  
+  gap: 2rem;
+  margin-top: 2rem;
 }
-
-.bvFont{
-  font-size: 2vw;
-  color: black;
-  font-style: bold;
-}
-/*ADName */
-.ADName{
-  background-color: white;
-  width: 1000px;
-  height: 700px;
-  color:black;
-  border: 3px bold green;
-  border-radius: 0.3;
-}
-/*GameName,GameInfo,GameStart*/
-.GameName{
-  margin-top: 10vw;
-  font-size: 10vw;
-  color: black;
-  font-style: normal;
-  margin-bottom: 200;
-}
-.GameInfo{
-  z-index: -1;
-  align-items: center;
-  font-size: 3vw;
-  color: black;
-  font-style: normal;
-  justify-content: center;
-  margin-bottom: 10vw;
-
-}
-.box{
-  display: flex;
-  justify-content: flex-end;
-}
-.GameStart{
-  align-items: center;
-  width: 400px;
-  height: 300px;
-  background-color: green;
-  border-radius: 2dvb;
-  font-size: 4vw;
-  color: white;
-  font-style: bold;
-}
-.flex-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  flex: 1;
-}
-
 .header {
   display: flex;
   justify-content: flex-end;
@@ -103,94 +32,136 @@ main {
 }
 
 
+/* Image,Font */
+.codeImage, .bvImage {
+  width: 30vw;
+  height: auto;
+  max-width: 100%;
+  padding: 10px;
+}
 
-
-.swap-main-container {
+.bvImage, .codeImage img {
   width: 100%;
-  height: 100%;
-  padding: 36px;
-  display: flex;
-  flex-direction: column;
-
-  border-radius: 10px;
-  border: 1px solid #bdbdbd;
+  height: auto;
 }
-
-.title-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 3dv;
-  align-items: center;
-}
-.ButtonMain{
-  margin-top: 2vw;
-}
-.box2{
+.bvFont {
+  font-size: 1.5rem;
+  color: black;
+  font-weight: bold;
   text-align: center;
-  justify-content: baseline;
+  margin-top: 1rem;
 }
-.title {
-  font-size: 24px;
-  letter-spacing: 1.2px;
-  font-weight: 900;
-  background: linear-gradient(
-    90deg,
-    rgb(146, 248, 150) 0%,
-    rgb(19, 188, 33) 0%,
-    rgba(71, 210, 166, 1) 36%,
-    rgb(25, 223, 111) 78%,
-    rgb(31, 89, 30) 100%,
-    rgb(5, 58, 52) 100%,
-  );
-}
-.swap-info-container {
-  display: flex;
-  flex-direction: column;
-  gap: 5dv;
+.image-board {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 3rem;
+  border: 10px solid black;
+  padding: 100px; 
 }
 
-.type-container {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
+.image-board img {
+  max-width: 100%;
+  height: auto;
+   /* 검은색 테두리 추가 */
+  padding: 5px; /* 테두리와 이미지 사이의 간격 조정 */
 }
 
-.type-text {
-  color: #8c8c8c;
-  flex: 1;
-  font-weight: 600;
+
+/*Ad */
+
+.ADName {
+  font-size: 1.5rem;  
+  padding: 30px 100px;  /* 좌우 패딩을 늘려서 버튼을 가로로 길게 만들기 */
+  margin: 60px 10px;
+  border: 2px solid #ffffff;  /* 흰색의 두꺼운 border 추가 */
+  border-radius: 20px;
+  background-color: black; 
+  color: white;
+  cursor: pointer;
+  display: block;  
+  width: max-content;  
+  transition: all 0.3s ease
+}
+
+.ADName:hover {
+  background-color: rgb(67, 66, 66); 
+  border-color: rgb(60, 59, 59);  /* 호버 시 border 색상도 변경 */
+}
+
+/*Game*/
+.GameName {
+  margin-top: 200px;
+  font-size: 5vw;
+  color: black;
+  font-style: normal;
+  margin-bottom: 20px;
+}
+
+.GameInfo {
+  font-size: 3vw;
+  color: black;
   text-align: center;
+  margin-bottom: 10vw;
 }
 
-.coin-img {
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-}
-
-.coin-info-container {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-}
-
-.amount {
-  display: flex;
+.GameStart {
   align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  font-weight: 900;
-  color: #515151;
-  letter-spacing: 1.2px;
-  flex: 1;
+  padding: 30px 100px;  /* 좌우 패딩을 늘려서 버튼을 가로로 길게 만들기 */
+  margin: 20px 10px;
+  background-color: rgb(28, 30, 28);
+  border-radius: 20px;  /* 수정된 부분 */
+  font-size: 4vw;
+  color: white;
+  font-weight: bold;  /* 수정된 부분 */
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-.balance {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  color: #686868;
-  flex: 1;
+.GameStart:hover {
+  background-color: rgb(28, 60, 28);
 }
+  
+/* Swap */
+
+
+  .box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Swap을 왼쪽으로 배치 */
+    width: 100%;
+    max-width: 800px;
+  }
+  
+  .title {
+    font-size: 10vw;
+    font-weight: 0;
+  }
+  
+  .subtitle {
+    padding: 20px 10px;
+    font-size: 5vw;
+  }
+  
+  .styleInput {
+    width: 700px;
+    padding: 30px 20px;
+    font-size: 18px;
+    margin-bottom: 6px;
+    border-radius: 10px;
+    border: 1px dashed rgba(0, 0, 0, 0.4);
+  }
+  
+  .Swap {
+    padding: 10px 10px;
+    background-color: #121413;
+    color: white;
+    font-size: 1.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .Swap:hover {
+    background-color: #073819;
+  }
