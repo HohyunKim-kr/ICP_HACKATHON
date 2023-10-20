@@ -137,7 +137,6 @@ export default class Mob extends Phaser.Physics.Arcade.Sprite {
   }
 
   die() {
-    // 폭발 효과를 발생시킵니다. (이미지, 소리)
     new Explosion(this.scene, this.x, this.y);
     this.scene.m_explosionSound.play();
 
@@ -145,10 +144,10 @@ export default class Mob extends Phaser.Physics.Arcade.Sprite {
       const expUp = new ExpUp(this.scene, this);
       this.scene.m_expUps.add(expUp);
     }
-    // player 쪽으로 움직이게 만들었던 event를 제거합니다.
-    this.scene.time.removeEvent(this.m_events);
 
-    // mob 객체를 제거합니다.
+    // 몹이 죽으면 TopBar의 mobs killed에 1을 더해줍니다.
+    this.scene.m_topBar.gainMobsKilled();
+    this.scene.time.removeEvent(this.m_events);
     this.destroy();
   }
 }

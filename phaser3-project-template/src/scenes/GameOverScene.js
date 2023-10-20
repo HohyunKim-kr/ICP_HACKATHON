@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import Config from "../Config";
+import Button from "../ui/Button";
 
 export default class GameOverScene extends Phaser.Scene {
   constructor() {
@@ -21,5 +22,9 @@ export default class GameOverScene extends Phaser.Scene {
         80
       )
       .setOrigin(0.5);
+
+    // new Button(Config.width / 2, Config.height / 2 + 180, "swap", this, () =>
+    //   this.scene.start("swap")
+    // );
   }
 }

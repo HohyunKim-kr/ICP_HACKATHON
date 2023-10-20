@@ -2,9 +2,13 @@ import Phaser from "phaser";
 import Config from "../Config";
 import Player from "../characters/Player";
 import Mob from "../characters/Mob";
+import TopBar from "../ui/TopBar";
+import ExpBar from "../ui/ExpBar";
 import { setBackground } from "../utils/backgroundManager";
-import { addMobEvent } from "../utils/mobManager";
+import { addMobEvent, removeOldestMobEvent } from "../utils/mobManager";
 import { addAttackEvent } from "../utils/attackManager";
+import { pause } from "../utils/pauseManager";
+import { createTime } from "../utils/time";
 
 export default class PlayingScene extends Phaser.Scene {
   constructor() {
@@ -25,6 +29,9 @@ export default class PlayingScene extends Phaser.Scene {
     this.m_gameClearSound = this.sound.add("audio_gameClear");
     this.m_pauseInSound = this.sound.add("audio_pauseIn");
     this.m_pauseOutSound = this.sound.add("audio_pauseOut");
+
+    this.m_topBar = new TopBar(this);
+    this.m_expBar = new ExpBar(this, 50);
 
     this.m_player = new Player(this);
 
@@ -88,6 +95,14 @@ export default class PlayingScene extends Phaser.Scene {
       null,
       this
     );
+
+    //esc pause
+    this.input.keyboard.on("keydown-ESC", () => {
+      pause(this, "pause");
+      this;
+    });
+
+    createTime(this);
   }
 
   update() {
@@ -108,16 +123,18 @@ export default class PlayingScene extends Phaser.Scene {
 
   // player와 expUp이 접촉했을 때 실행되는 메소드입니다.
   pickExpUp(player, expUp) {
-    // expUp을 비활성화하고 화면에 보이지 않게 합니다.
     expUp.disableBody(true, true);
-    // expUp을 제거합니다.
     expUp.destroy();
 
-    // 소리를 재생합니다.
     this.m_expUpSound.play();
-    // 일단 콘솔로 상승한 경험치를 출력합니다.
-    console.log(`경험치 ${expUp.m_exp} 상승!`);
+    // expUp item을 먹으면 expBar의 경험치를 아이템의 m_exp 값만큼 증가시켜줍니다.
+    this.m_expBar.increase(expUp.m_exp);
+    // 만약 현재 경험치가 maxExp 이상이면 레벨을 증가시켜줍니다.
+    if (this.m_expBar.m_currentExp >= this.m_expBar.m_maxExp) {
+      pause(this, "levelup");
+    }
   }
+
   movePlayerManager() {
     if (
       this.m_cursorKeys.left.isDown ||
@@ -149,5 +166,32 @@ export default class PlayingScene extends Phaser.Scene {
     }
 
     this.m_player.move(vector);
+    // static 공격들은 player가 이동하면 그대로 따라오도록 해줍니다.
+    this.m_weaponStatic.children.each((weapon) => {
+      weapon.move(vector);
+    }, this);
+  }
+
+  afterLevelUp() {
+    this.m_topBar.gainLevel();
+
+    // 레벨이 2, 3, 4, ..가 되면 등장하는 몹을 변경해줍니다.
+    // 이전 몹 이벤트를 지우지 않으면 난이도가 너무 어려워지기 때문에 이전 몹 이벤트를 지워줍니다.
+    // 레벨이 높아질 수록 강하고 아이텝 드랍율이 낮은 몹을 등장시킵니다.
+    // repeatGap은 동일하게 설정했지만 레벨이 올라갈수록 더 짧아지도록 조절하셔도 됩니다.
+    switch (this.m_topBar.m_level) {
+      case 2:
+        removeOldestMobEvent(this);
+        addMobEvent(this, 1000, "mob2", "mob2_anim", 20, 0.8);
+        break;
+      case 3:
+        removeOldestMobEvent(this);
+        addMobEvent(this, 1000, "mob3", "mob3_anim", 30, 0.7);
+        break;
+      case 4:
+        removeOldestMobEvent(this);
+        addMobEvent(this, 1000, "mob4", "mob4_anim", 40, 0.7);
+        break;
+    }
   }
 }
