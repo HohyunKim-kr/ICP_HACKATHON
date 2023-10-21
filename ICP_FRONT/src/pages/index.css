@@ -57,6 +57,8 @@ html, body, main {
   gap: 3rem;
   border: 10px solid black;
   padding: 100px; 
+  align-items: center;
+  
 }
 
 .image-board img {
@@ -72,14 +74,14 @@ html, body, main {
 .ADName {
   font-size: 1.5rem;  
   padding: 30px 100px;  /* 좌우 패딩을 늘려서 버튼을 가로로 길게 만들기 */
-  margin: 60px 10px;
+  margin: 0;
   border: 2px solid #ffffff;  /* 흰색의 두꺼운 border 추가 */
   border-radius: 20px;
   background-color: black; 
   color: white;
   cursor: pointer;
-  display: block;  
-  width: max-content;  
+  justify-content: start;
+  align-items: baseline;
   transition: all 0.3s ease
 }
 

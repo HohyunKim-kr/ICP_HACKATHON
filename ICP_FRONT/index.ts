@@ -4,57 +4,61 @@ import{
     Record, // Allowance를 통해 값을 받음 
     update,
     Vec,
-    ic,
     StableBTreeMap,
     Opt,
     bool,
   
+  
 }from 'azle'
-
+let level = nat64;
+const CANISTER_ID ="캐니스터 ID";
+// From 주소 : CANISTER_ID
+// to 주소는 :0 으로 설정 
 export const Allowances = Record({
- spender:text,
+ spender:text, // 특정 양을 보낼 수 있음을 저장 
  amount: nat64,
 });
 export const Account = Record({
   address: text,
-  balance: nat64,
+  totalSupply: nat64,
   allowances: Vec(Allowances),
 });
 // 맵에다 값들이 들어오면 저장하는 형식이다. 
-// StableBTreeMap이 클래스라고 가정하면:
+// StableBTreeMap이 클래스라고 가정하면:0 의 성질은 뺴도 되지 않을까/
+// callerAccount == toAccount 와 같다고 생각한다. 
 let state = new StableBTreeMap(text, Account, 0);
-//from 주소를 0으로 설정 
-
-
+// state는 상태 지정 
 const tokenInfo = {
-  name: "",
-  
+  name: "Canister",
+  totalSupply: 100n, // 공급량 
+  owner: "jw",
 };
+
 function getCaller() : string {
-  const caller = ic.caller().toString();
-  return caller;
+  // 현재 ic.caller()를 반환하는 대신 CANISTER_ID 값을 반환합니다.
+  return CANISTER_ID;
 }
+
 function getAccountByAddress(address: text): Opt<typeof Account> {
   return state.get(address);
 }
-function insertAccount(address: text, account: typeof Account): typeof Account {
-  state.insert(address, account);
+function insertAccount(address: text, totalSupply: typeof Account): typeof Account {
+  state.insert(address,totalSupply);
   const newAccountOpt = getAccountByAddress(address);
   if ("None" in newAccountOpt) {
     throw new Error("Insert failed");
   }
   return newAccountOpt.Some;
 }
-
+// Canister 에서 return 된 totalSupply 를 보여주고자 한다. 
 export default Canister({
   balanceOf: query([text], nat64, (address) => {
-    const accountOpt = getAccountByAddress(address);
+    const accountOpt = getAccountByAddress(CANISTER_ID);
     if ("None" in accountOpt) {
       return 0n;
     }
-    return accountOpt.Some.balance;
+    return accountOpt.Some.totalSupply; // canister_id의 양이 반환될 것이다. 
   }),
-
   transfer: update([text, nat64], bool, (to, amount) => {
     const fromAddress = getCaller();
     const fromAccountOpt = getAccountByAddress(fromAddress);
@@ -73,15 +77,12 @@ export default Canister({
       };
       toAccount = insertAccount(to, newToAccount);
     } else {
-      toAccount = toAccountOpt.Some;
+      toAccount = toAccountOpt.Some; // 이거를 0으로 만든다. 
     }
 
     if (!fromAccount || fromAccount.balance < amount) {
       return false;
     }
-
-    fromAccount.balance -= amount;
-    toAccount.balance += amount;
 
     insertAccount(fromAddress, fromAccount);
     insertAccount(to, toAccount);
@@ -109,7 +110,7 @@ export default Canister({
     insertAccount(to, toAccount);
     return true;
   }),
- 
+   // token으로 아이템을 살때 , 사용자가 아이템을 사용했을 때 값에 비례하는 토큰을 태운다. 
   burn: update([nat64], bool, (amount) => {
     const caller = getCaller();
 
@@ -122,15 +123,14 @@ export default Canister({
     if (callerAccount.balance < amount) {
       throw new Error("Insufficient tokens to burn");
     }
-
-    callerAccount.balance -= amount;
     tokenInfo.totalSupply -= amount;
-
+    callerAccount.totalSupply += amount;
     insertAccount(caller, callerAccount);
     return true;
   }),
 });
 
+// error 처리 
 function Canister(arg0: { balanceOf: any; transfer: any; mint: any; burn: any; }) {
   throw new Error('Function not implemented.');
 }
@@ -142,7 +142,6 @@ function query(arg0: any[], nat64: any, arg2: (address: any) => any): any {
 function StableBTreeMap(text: any, Account: any, arg2: number) {
   throw new Error('Function not implemented.');
 }
-// ... [기존 코드]
 
 function AddToken(amount: nat64) {
   const caller = getCaller();
@@ -157,27 +156,13 @@ function AddToken(amount: nat64) {
   if (callerAccount.balance < amount) {
     throw new Error("Insufficient balance");
   }
+  if (!amount) {
+    amount = BigInt(Math.floor(level * 1.3));
+   }
 
   callerAccount.balance -= amount;
   insertAccount(caller, callerAccount);
-}
-
-function MinusToken(amount: nat64) {
-  const caller = getCaller();
-  const callerAccountOpt = getAccountByAddress(caller);
-  
-  if ("None" in callerAccountOpt) {
-    throw new Error("Caller account not found");
-  }
-  const callerAccount = callerAccountOpt.Some;
-
-  callerAccount.balance += amount;
-  insertAccount(caller, callerAccount);
-}
-
-
-//이것을 프론트에서는 어떻게 활용할 것인지 
-// name 과 owner의 차이 
+};
 
 
 
