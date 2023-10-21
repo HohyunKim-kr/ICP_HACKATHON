@@ -1,15 +1,5 @@
-# System and IDE files
-Thumbs.db
-.DS_Store
-.idea
-*.suo
-*.sublime-project
-*.sublime-workspace
-*.vscode
+.azle
+.dfx
+dfx_generated
+node_modules
 
-# Vendors
-node_modules/
-
-# Build
-dist/
-/npm-debug.log
