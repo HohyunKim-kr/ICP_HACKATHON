@@ -23,13 +23,12 @@ export const Account = Record({
 // 맵에다 값들이 들어오면 저장하는 형식이다. 
 // StableBTreeMap이 클래스라고 가정하면:
 let state = new StableBTreeMap(text, Account, 0);
+//from 주소를 0으로 설정 
 
 
 const tokenInfo = {
   name: "",
-  ticker: "",
-  totalSupply: 0n,
-  owner: "",
+  
 };
 function getCaller() : string {
   const caller = ic.caller().toString();
@@ -178,7 +177,7 @@ function MinusToken(amount: nat64) {
 
 
 //이것을 프론트에서는 어떻게 활용할 것인지 
-
+// name 과 owner의 차이 
 
 
 
