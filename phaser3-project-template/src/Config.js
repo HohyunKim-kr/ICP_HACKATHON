@@ -5,8 +5,8 @@ import GameOverScene from "./scenes/GameOverScene";
 import GameClearScene from "./scenes/GameClearScene";
 
 const Config = {
-  width: 800,
-  height: 600,
+  width: 1400,
+  height: 1000,
   backgroundColor: 0x000000,
   scene: [LoadingScene, MainScene, PlayingScene, GameOverScene, GameClearScene],
   pixelArt: true,

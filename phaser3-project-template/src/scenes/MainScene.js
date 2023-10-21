@@ -21,7 +21,7 @@ export default class MainScene extends Phaser.Scene {
         Config.width / 2,
         150,
         "pixelFont",
-        "Save the Weniv World!",
+        "HELLO ICP X CODESTATES WORLD",
         60
       )
       .setOrigin(0.5);

@@ -56,7 +56,7 @@ export default class GameClearScene extends Phaser.Scene {
     new Button(
       Config.width / 2,
       Config.height / 2 + 180,
-      "Go to Main",
+      "HARVEST YOUR AD",
       this,
       () => this.scene.start("mainScene")
     );
