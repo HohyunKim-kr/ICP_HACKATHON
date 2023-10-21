@@ -1,19 +1,10 @@
 import Phaser from "phaser";
 import Explosion from "../effects/Explosion";
 import ExpUp from "../items/ExpUp";
+import { removeAttack } from "../utils/attackManager";
+import { winGame } from "../utils/sceneManager";
 
 export default class Mob extends Phaser.Physics.Arcade.Sprite {
-  /**
-   * scene의 (x, y) 위치에 texture 이미지 및 animKey 애니메이션을 실행하며
-   * initHp의 HP, dropRate의 아이템 드랍율을 가진 Mob object를 추가합니다.
-   * @param {Phaser.scene} scene
-   * @param {Number} x
-   * @param {Number} y
-   * @param {String} texture
-   * @param {String} animKey
-   * @param {Number} initHp
-   * @param {Number} dropRate
-   */
   constructor(scene, x, y, texture, animKey, initHp, dropRate) {
     super(scene, x, y, texture);
     scene.add.existing(this);
@@ -22,14 +13,12 @@ export default class Mob extends Phaser.Physics.Arcade.Sprite {
     this.play(animKey);
     this.setDepth(10);
     this.scale = 2;
-    // speed, hp, dropRate 멤버 변수를 추가해줍니다.
-    // speed를 몹마다 다르게 조절할 수도 있습니다.
+
     this.m_speed = 50;
     this.m_hp = initHp;
     this.m_dropRate = dropRate;
+    this.m_isDead = false;
 
-    // 각 몹마다 사이즈에 맞게 body size, offset을 설정해주었습니다.
-    // https://newdocs.phaser.io/docs/3.60.0-beta.20 에서 setbodysize 검색
     if (texture === "mob1") {
       // mob 1만 바닥을 기준으로 움직이고 있습니다. 움직일 때 중심을 기준으로 움직이지 않고 오프셋을 설정한 곳에 기준으로 움직이게 해두었습니다. 아주 미묘한 차이입니다.
       this.setBodySize(24, 14, false);
@@ -41,6 +30,7 @@ export default class Mob extends Phaser.Physics.Arcade.Sprite {
     } else if (texture === "mob4") {
       this.setBodySize(24, 32);
     } else if (texture === "lion") {
+      this.m_speed = 60;
       this.setBodySize(40, 64);
     }
 
@@ -75,7 +65,7 @@ export default class Mob extends Phaser.Physics.Arcade.Sprite {
     if (this.x < this.scene.m_player.x) this.flipX = true;
     else this.flipX = false;
 
-    if (this.m_hp <= 0) {
+    if (this.m_hp <= 0 && !this.m_isDead) {
       this.die();
     }
   }
@@ -112,6 +102,7 @@ export default class Mob extends Phaser.Physics.Arcade.Sprite {
   displayHit() {
     // 몹의 투명도를 0.5로 변경하고,
     // 1초 후 1로 변경합니다.
+    if (this.texture.key === "lion") return;
     this.alpha = 0.5;
     this.scene.time.addEvent({
       delay: 1000,
@@ -137,6 +128,8 @@ export default class Mob extends Phaser.Physics.Arcade.Sprite {
   }
 
   die() {
+    this.m_isDead = true;
+
     new Explosion(this.scene, this.x, this.y);
     this.scene.m_explosionSound.play();
 
@@ -148,6 +141,43 @@ export default class Mob extends Phaser.Physics.Arcade.Sprite {
     // 몹이 죽으면 TopBar의 mobs killed에 1을 더해줍니다.
     this.scene.m_topBar.gainMobsKilled();
     this.scene.time.removeEvent(this.m_events);
-    this.destroy();
+
+    // 보스몹이 죽었을 때
+    if (this.texture.key === "lion") {
+      // 공격을 제거합니다. (attackManager.js 참고)
+      removeAttack(this.scene, "catnip");
+      removeAttack(this.scene, "beam");
+      removeAttack(this.scene, "claw");
+      // 플레이어가 보스몹과 접촉해도 HP가 깎이지 않도록 만듭니다.
+      this.disableBody(true, false);
+      // 보스몹이 움직이던 애니메이션을 멉춥니다.
+      this.play("lion_idle");
+      // 모든 몹의 움직임을 멈춥니다.
+      this.scene.m_mobs.children.each((mob) => {
+        mob.m_speed = 0;
+      });
+
+      // 보스몹이 서서히 투멍해지도록 합니다.
+      this.scene.time.addEvent({
+        delay: 30,
+        callback: () => {
+          this.alpha -= 0.01;
+        },
+        repeat: 100,
+      });
+      // 보스몹이 투명해진 후, GameClearScene으로 화면을 전환합니다.
+      this.scene.time.addEvent({
+        delay: 4000,
+        callback: () => {
+          winGame(this.scene);
+        },
+        loop: false,
+      });
+    }
+    // 보스몹이 아닌 몹이 죽었을 때
+    else {
+      // 몹이 사라집니다.
+      this.destroy();
+    }
   }
 }

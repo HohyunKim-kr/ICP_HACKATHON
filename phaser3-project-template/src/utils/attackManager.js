@@ -87,14 +87,13 @@ function doAttackOneSet(scene, attackType, damage, scale) {
 
 // scene에 있는 attackType의 공격을 제거해주는 함수입니다.
 export function removeAttack(scene, attackType) {
+  // 공격이 없을 경우 remove attack을 패스합니다.
   if (!scene.m_attackEvents[attackType]) return;
 
   if (attackType === "catnip") {
-    // scene.m_attackEvents.catnip.destroy();
     scene.m_attackEvents[attackType].object.destroy();
     return;
   }
-
   scene.time.removeEvent(scene.m_attackEvents[attackType].timer);
 }
 
